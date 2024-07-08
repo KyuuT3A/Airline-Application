@@ -8,9 +8,6 @@ CREATE PROCEDURE uspAddPassenger(
     ,@strZip					AS VARCHAR(255)
     ,@strPhoneNumber			AS VARCHAR(255)    
     ,@strEmail					AS VARCHAR(255)
-	,@strPassengerLoginID		AS VARCHAR(255)
-	,@strPassengerPassword		AS VARCHAR(255)
-	,@dtmPassengerDateofBirth	DATETIME
 )       
 AS
 SET XACT_ABORT ON --terminate and rollback if any errors
@@ -20,8 +17,8 @@ BEGIN TRANSACTION
 
     -- default to 1 if table is empty
     SELECT @intPassengerID = COALESCE(@intPassengerID, 1)
-    INSERT INTO TPassengers (intPassengerID, strFirstName, strLastName, strAddress, strCity, intStateID, strZip, strPhoneNumber, strEmail, strPassengerLoginID, strPassengerPassword, dtmPassengerDateofBirth)
-    VALUES (@intPassengerID, @strFirstName, @strLastName, @strAddress, @strCity, @intState, @strZip, @strPhoneNumber, @strEmail, @strPassengerLoginID, @strPassengerPassword, @dtmPassengerDateofBirth)
+    INSERT INTO TPassengers (intPassengerID, strFirstName, strLastName, strAddress, strCity, intStateID, strZip, strPhoneNumber, strEmail)
+    VALUES (@intPassengerID, @strFirstName, @strLastName, @strAddress, @strCity, @intState, @strZip, @strPhoneNumber, @strEmail)
 
 COMMIT TRANSACTION
 GO

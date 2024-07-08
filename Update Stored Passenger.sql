@@ -8,10 +8,7 @@ CREATE PROCEDURE uspUpdatePassenger
     ,@strZip					AS VARCHAR(255)
     ,@strPhoneNumber			AS VARCHAR(255)    
     ,@strEmail					AS VARCHAR(255)
-    ,@strPassengerLoginID		AS VARCHAR(255)
-	,@strPassengerPassword		AS VARCHAR(255)
-	,@dtmPassengerDateofBirth	DATETIME
-	
+       
 AS
 SET XACT_ABORT ON --terminate and rollback if any errors
 BEGIN TRANSACTION
@@ -24,10 +21,7 @@ BEGIN TRANSACTION
 				intStateID =	@intState,
 				strZip =		@strZip,
 				strPhoneNumber = @strPhoneNumber,
-				strEmail =		@strEmail,
-				strPassengerLoginID = @strPassengerLoginID,
-				strPassengerPassword = @strPassengerPassword,
-				dtmPassengerDateofBirth = @dtmPassengerDateofBirth
-							   			
+				strEmail =		@strEmail				
+			
 	WHERE  intPassengerID = @intPassengerID
 COMMIT TRANSACTION

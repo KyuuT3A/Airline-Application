@@ -23,7 +23,7 @@ IF OBJECT_ID ('TPassengers')			IS NOT NULL DROP TABLE TPassengers
 IF OBJECT_ID ('TPilots')				IS NOT NULL DROP TABLE TPilots
 IF OBJECT_ID ('TAttendants')			IS NOT NULL DROP TABLE TAttendants
 IF OBJECT_ID ('TMaintenanceWorkers')	IS NOT NULL DROP TABLE TMaintenanceWorkers
-IF OBJECT_ID('TEmployees')				IS NOT NULL DROP TABLE TEmployees;
+
 IF OBJECT_ID ('TFlights')				IS NOT NULL DROP TABLE TFlights
 IF OBJECT_ID ('TMaintenances')			IS NOT NULL DROP TABLE TMaintenances
 IF OBJECT_ID ('TPlanes')				IS NOT NULL DROP TABLE TPlanes
@@ -45,9 +45,6 @@ CREATE TABLE TPassengers
 	,strZip					VARCHAR(255)	NOT NULL
 	,strPhoneNumber			VARCHAR(255)	NOT NULL
 	,strEmail				VARCHAR(255)	NOT NULL
-	,strPassengerLoginID	VARCHAR(255)	NOT NULL
-	,strPassengerPassword	VARCHAR(255)	NOT NULL
-	,dtmPassengerDateofBirth DATETIME		NOT NULL
 	,CONSTRAINT TPassengers_PK PRIMARY KEY ( intPassengerID )
 )
 
@@ -126,16 +123,6 @@ CREATE TABLE TPlanes
 	,CONSTRAINT TPlanes_PK PRIMARY KEY ( intPlaneID )
 )
 
-CREATE TABLE TEmployees 
-(
-    intEmployeeID				INTEGER			NOT NULL
-   ,strEmployeeLoginID			VARCHAR(255)	NOT NULL
-   ,strEmployeePassword			VARCHAR(255)	NOT NULL
-   ,strEmployeeRole				VARCHAR(255)	NOT NULL
-   ,EmployeeID					INTEGER
-   ,CONSTRAINT TEmployees_PK PRIMARY KEY ( intEmployeeID ) 
-);
-
 CREATE TABLE TPlaneTypes	
 (
 	 intPlaneTypeID			INTEGER			NOT NULL
@@ -180,7 +167,6 @@ CREATE TABLE TFlightPassengers
 	,intFlightID				INTEGER			NOT NULL
 	,intPassengerID				INTEGER			NOT NULL
 	,strSeat					VARCHAR(255)	NOT NULL
-	,intFlightCost				INTEGER			NOT NULL
 	,CONSTRAINT TFlightPassengers_PK PRIMARY KEY ( intFlightPassengerID )
 )
 
@@ -192,7 +178,6 @@ CREATE TABLE TMaintenanceMaintenanceWorkers
 	,intHours								INTEGER			NOT NULL
 	,CONSTRAINT TMaintenanceMaintenanceWorkers_PK PRIMARY KEY ( intMaintenanceMaintenanceWorkerID )
 )
-
 -- --------------------------------------------------------------------------------
 --	Step #2 : Establish Referential Integrity 
 -- --------------------------------------------------------------------------------
@@ -215,14 +200,12 @@ CREATE TABLE TMaintenanceMaintenanceWorkers
 -- 14	TMaintenanceMaintenanceWorkers	TMaintenanceWorker			intMaintenanceWorkerID
 -- 15	TFlightPassenger				TFlights					intFlightID
 
-
-
 --1
 ALTER TABLE TPassengers ADD CONSTRAINT TPassengers_TStates_FK 
 FOREIGN KEY ( intStateID ) REFERENCES TStates ( intStateID )	
 
 --2
-ALTER TABLE TFlightPassengers ADD CONSTRAINT TFlightPassengers_TPassengers_FK 
+ALTER TABLE TFlightPassengers ADD CONSTRAINT TPFlightPassengers_TPassengers_FK 
 FOREIGN KEY ( intPassengerID ) REFERENCES TPassengers ( intPassengerID )	
 --3
 ALTER TABLE TFlights	 ADD CONSTRAINT TFlights_TPlanes_FK 
@@ -307,23 +290,14 @@ VALUES				(1, 'Cincinnati', 'CVG')
 				   ,(5, 'Denver', 'DEN')
 				   ,(6, 'Orlando', 'MCO' )
 				   
-INSERT INTO TPassengers (intPassengerID, strFirstName, strLastName, strAddress, strCity, intStateID, strZip, strPhoneNumber, strEmail, strPassengerLoginID, strPassengerPassword, dtmPassengerDateofBirth)
-VALUES				  (1, 'Knelly', 'Nervious', '321 Elm St.', 'Cincinnati', 1, '45201', '5135553333', 'nnelly@gmail.com', 'Knelly321', 'Cinc45201', '1/1/2022')
-					 ,(2, 'Orville', 'Waite', '987 Oak St.', 'Cleveland', 1, '45218', '5135556333', 'owright@gmail.com', 'Orville987', 'Clev45218', '2/2/2000')
-					 ,(3, 'Eileen', 'Awnewe', '1569 Windisch Rd.', 'Dayton', 1, '45069', '5135555333', 'eonewe1@yahoo.com', 'Eileen1569', 'Dayt45069', '3/3/1967')
-					 ,(4, 'Bob', 'Eninocean', '44561 Oak Ave.', 'Florence', 2, '45246', '8596663333', 'bobenocean@gmail.com', 'Bob44561', 'Flor45246', '4/4/1958')
-					 ,(5, 'Ware', 'Hyjeked', '44881 Pine Ave.', 'Aurora', 3, '45546', '2825553333', 'Hyjekedohmy@gmail.com', 'Ware44881', 'Auro45546', '5/5/1945')
-					 ,(6, 'Kay', 'Oss', '4484 Bushfield Ave.', 'Lawrenceburg', 3, '45546', '2825553333', 'wehavekayoss@gmail.com', 'Kay4484', 'Lawr45546', '6/6/1996')
-					 					 
-INSERT INTO TEmployees (intEmployeeID, strEmployeeLoginID, strEmployeePassword, strEmployeeRole, EmployeeID)
-VALUES				 (1, 'john.doe', 'password123', 'Admin', 1)
-					,(2, 'jane.smith', 'pass456', 'Pilot', 2)
-					,(3, 'alice.wonderland', 'abc123', 'Attendant', 3)
-					,(4, 'bob.builder', 'b0bPwd', 'Attendant', 3)
-					,(5, 'JohnathanTech', 'Liberty123', 'Admin', 1)
-					,(6, 'Honeywell', 'Corp4321', 'Admin', 1)
-
-
+INSERT INTO TPassengers (intPassengerID, strFirstName, strLastName, strAddress, strCity, intStateID, strZip, strPhoneNumber, strEmail)
+VALUES				  (1, 'Knelly', 'Nervious', '321 Elm St.', 'Cincinnati', 1, '45201', '5135553333', 'nnelly@gmail.com')
+					 ,(2, 'Orville', 'Waite', '987 Oak St.', 'Cleveland', 1, '45218', '5135556333', 'owright@gmail.com')
+					 ,(3, 'Eileen', 'Awnewe', '1569 Windisch Rd.', 'Dayton', 1, '45069', '5135555333', 'eonewe1@yahoo.com')
+					 ,(4, 'Bob', 'Eninocean', '44561 Oak Ave.', 'Florence', 2, '45246', '8596663333', 'bobenocean@gmail.com')
+					 ,(5, 'Ware', 'Hyjeked', '44881 Pine Ave.', 'Aurora', 3, '45546', '2825553333', 'Hyjekedohmy@gmail.com')
+					 ,(6, 'Kay', 'Oss', '4484 Bushfield Ave.', 'Lawrenceburg', 3, '45546', '2825553333', 'wehavekayoss@gmail.com')
+					 
 INSERT INTO TPilots (intPilotID, strFirstName, strLastName, strEmployeeID, dtmDateofHire, dtmDateofTermination, dtmDateofLicense, intPilotRoleID)
 VALUES				  (1, 'Tip', 'Seenow', '12121', '1/1/2015', '1/1/2099', '12/1/2014', 1)
 					 ,(2, 'Ima', 'Soring', '13322', '1/1/2016', '1/1/2099', '12/1/2015', 1)
@@ -364,9 +338,9 @@ VALUES				  (1, '4/1/2022', '111', '10:00:00', '12:00:00', 1, 2, 1200, 2)
 					 ,(8, '3/17/2022', '888','09:00:00', '11:00:00', 6, 4, 1100, 5)
 					 ,(9, '4/19/2022', '999','08:00:00', '10:00:00', 4, 2, 1000, 6)
 					 ,(10, '4/22/2022', '091','10:00:00', '12:00:00', 2, 1, 1200, 6)
-					 ,(11, '04/10/2024', 'Delta', '08:00:00', '10:00:00', 1, 2, 1600, 1)
-				     ,(12, '07/15/2024', 'Frontier', '09:30:00', '14:00:00', 2, 3, 700, 2) 
-					 ,(13, '09/01/2024', 'Southwest ', '10:45:00', '10:00:00', 2, 4, 500, 1)
+					 ,(11, '04/10/2024', 'Delta', '08:00:00', '10:00:00', 1, 2, 1000, 1)
+				     ,(12, '07/15/2024', 'Frontier', '09:30:00', '14:00:00', 2, 3, 1200, 2) 
+					 ,(13, '09/01/2024', 'Southwest ', '10:45:00', '10:00:00', 2, 4, 1500, 1)
 				     ,(14, '11/30/2024', 'United', '12:15:00', '14:00:00', 2, 6, 1600, 2)
 					 ,(15, '09/01/2026', 'Korean ', '11:45:12', '05:00:00', 3, 1, 1800, 1)
 				     ,(16, '11/30/2026', 'Korean', '12:20:00', '16:00:00', 4, 6, 1600, 2)
@@ -424,35 +398,35 @@ VALUES				( 1, 1, 2 )
 					,( 21, 2, 15 )
 					,( 22, 3, 16 )
 
-INSERT INTO TFlightPassengers ( intFlightPassengerID, intFlightID, intPassengerID, strSeat, intFlightCost)
-VALUES				 ( 1, 1, 1, '1A', 2350)
-					,( 2, 1, 2, '2A',  3100)
-					,( 3, 1, 3, '1B',  1500)
-					,( 4, 1, 4, '1C',  3750)
-					,( 5, 1, 5, '1D', 850)
-					,( 6, 2, 5, '1A', 1200)
-					,( 7, 2, 4, '2A', 2200)
-					,( 8, 2, 3, '1B', 350)
-					,( 9, 3, 1, '1B', 600)
-					,( 10, 3, 2, '2A', 750)
-					,( 11, 3, 3, '1B', 850)
-					,( 12, 3, 4, '1C', 1100)
-					,( 13, 3, 5, '1D', 3750)
-					,( 14, 4, 2, '1A', 450)
-					,( 15, 4, 3, '1B', 150)
-					,( 16, 4, 4, '1C', 650)
-					,( 17, 4, 5, '1D', 900)
-					,( 18, 5, 1, '1A', 3350)
-					,( 19, 5, 2, '2A', 500)
-					,( 20, 5, 3, '1B', 950)
-					,( 21, 5, 4, '2B', 1400)
-					,( 22, 14, 1, '1D', 1550)
-					,( 23, 13, 2, '2A', 600)
-					,( 24, 10, 3, '3A', 800)
-					,( 25, 12, 5, '1A', 200)
-					,( 26, 11, 2, '2B', 100)
-					,( 27, 16, 3, '1C', 250)
-					,( 28, 15, 4, '2C', 2100)
+INSERT INTO TFlightPassengers ( intFlightPassengerID, intFlightID, intPassengerID, strSeat)
+VALUES				 ( 1, 1, 1, '1A')
+					,( 2, 1, 2, '2A' )
+					,( 3, 1, 3, '1B' )
+					,( 4, 1, 4, '1C' )
+					,( 5, 1, 5, '1D' )
+					,( 6, 2, 5, '1A' )
+					,( 7, 2, 4, '2A' )
+					,( 8, 2, 3, '1B' )
+					,( 9, 3, 1, '1B' )
+					,( 10, 3, 2, '2A' )
+					,( 11, 3, 3, '1B' )
+					,( 12, 3, 4, '1C' )
+					,( 13, 3, 5, '1D' )
+					,( 14, 4, 2, '1A' )
+					,( 15, 4, 3, '1B' )
+					,( 16, 4, 4, '1C' )
+					,( 17, 4, 5, '1D' )
+					,( 18, 5, 1, '1A' )
+					,( 19, 5, 2, '2A' )
+					,( 20, 5, 3, '1B' )
+					,( 21, 5, 4, '2B' )
+					,( 22, 14, 1, '1D' )
+					,( 23, 13, 2, '2A' )
+					,( 24, 10, 3, '3A' )
+					,( 25, 12, 5, '1A' )
+					,( 26, 11, 2, '2B' )
+					,( 27, 16, 3, '1C' )
+					,( 28, 15, 4, '2C' )
 
 INSERT INTO TMaintenanceMaintenanceWorkers ( intMaintenanceMaintenanceWorkerID, intMaintenanceID, intMaintenanceWorkerID, intHours)
 VALUES				 ( 1, 2, 1, 2 )
@@ -467,30 +441,6 @@ VALUES				 ( 1, 2, 1, 2 )
 					,( 10, 4, 4, 1 )
 					,( 11, 3, 3, 4 )
 					,( 12, 7, 3, 8 )
-
-
---DECLARE @PassengerID INT;
---SET @PassengerID = 1;
-
---SELECT * FROM TPassengers WHERE intPassengerID = @PassengerID;
-
-
---ALTER TABLE TFlightPassengers ALTER COLUMN intFlightID INTEGER NOT NULL;
-
---SELECT 
---    strLastname, 
---    dtmPassengerDateofBirth, 
---    FLOOR(DATEDIFF(DAY, dtmPassengerDateofBirth, GETDATE()) / 365.25) AS Age
---FROM 
---    TPassengers;
-
-
-
-SELECT * FROM TEmployees;
---SELECT * FROM TPilots;
---SELECT * FROM TFlights;
----- and so on for each table
-
 
 --SELECT intStateID, strState 
 --From TStates
@@ -531,25 +481,16 @@ SELECT * FROM TEmployees;
 --WHERE YEAR(dtmFlightDate) > 2023 
 --ORDER BY dtmFlightDate ASC
 
---"SELECT TF.intMilesFlown, " &
---"COUNT(TFP.intFlightID) AS ReservedSeatCount " &
---", PT.strPlaneType  " &
---"FROM TFlights AS TF  " &
---"INNER JOIN TPlanes AS TP ON TF.intPlaneID = TP.intPlaneID " &
---"INNER JOIN TPlaneTypes AS PT ON TP.intPlaneTypeID = PT.intPlaneTypeID " &
---"INNER JOIN TFlightPassengers AS TFP ON TF.intFlightID = TFP.intFlightID " &
---"WHERE TF.intFlightID = " & intFlightID & " " &
---"GROUP BY TF.intMilesFlown, PT.strPlaneType"
+--ALTER TABLE TAttendantFlights
+--DROP CONSTRAINT TAttendantFlights_TAttendants_FK
 
---SELECT strLastname, dtmPassengerDateofBirth, FLOOR(DATEDIFF(DAY, dtmPassengerDateofBirth, GetDate()) / 365.25) AS Age 
---FROM TPassengers
+--ALTER TABLE TAttendantFlights
+--ADD CONSTRAINT TAttendantFlights_TAttendants_FK
+--    FOREIGN KEY (intAttendantID)
+--    REFERENCES TAttendants (intAttendantID)
+--    ON DELETE CASCADE
 
---SELECT COLUMN_NAME, DATA_TYPE
---FROM INFORMATION_SCHEMA.COLUMNS
---WHERE TABLE_NAME = 'TFlightPassengers' AND COLUMN_NAME = 'intFlightCost';
 
----- Check for constraints on intFlightID and intPassengerID columns
---EXEC sp_help TFlightPassengers;
 
 
 
